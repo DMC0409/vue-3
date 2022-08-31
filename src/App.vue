@@ -1,5 +1,5 @@
 <template>
-  <div class="box">
+  <div class="box" :style="{ background: `url(${bg}) no-repeat`,backgroundSize:'100% 100%'}">
     <div class="box-left"></div>
     <div class="box-middle"></div>
     <div class="box-right"></div>
@@ -7,6 +7,7 @@
 </template>
 
 <script setup lang="ts">
+import bg from "@/assets/1.jpg";
 </script>
 
 <style lang='scss' scoped>
@@ -15,14 +16,12 @@
   height: 100%;
   &-left {
     width: 400px;
-    background: red;
   }
   &-middle {
     flex: 1;
   }
   &-right {
     width: 400px;
-    background: green;
   }
 }
 </style>

@@ -1,5 +1,8 @@
 <template>
-  <div class="box" :style="{ background: `url(${bg}) no-repeat`,backgroundSize:'100% 100%'}">
+  <div
+    class="box"
+    :style="{ background: `url(${bg}) no-repeat`, backgroundSize: '100% 100%' }"
+  >
     <div class="box-left"></div>
     <div class="box-middle"></div>
     <div class="box-right"></div>
@@ -8,6 +11,10 @@
 
 <script setup lang="ts">
 import bg from "@/assets/1.jpg";
+import { useStore } from "./stores";
+
+const store = useStore();
+store.getList();
 </script>
 
 <style lang='scss' scoped>

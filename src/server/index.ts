@@ -1,5 +1,5 @@
-import axiso from 'axios'
-const server = axiso.create({
+import axios from 'axios'
+const server = axios.create({
   baseURL: 'http://localhost:3333'
 })
 

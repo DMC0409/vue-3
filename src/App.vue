@@ -5,7 +5,9 @@
   >
     <div class="box-left"></div>
     <div class="box-middle" id="china"></div>
-    <div class="box-right"></div>
+    <div class="box-right">
+      <table></table>
+    </div>
   </div>
 </template>
 
@@ -17,9 +19,11 @@ import * as echarts from "echarts";
 import chinaJson from "@/assets/china.json";
 
 const store = useStore();
-
 onMounted(async () => {
   await store.getList();
+  initChart();
+});
+const initChart = () => {
   const city = store.list.diseaseh5Shelf.areaTree[0].children;
   const data = city.map((item) => {
     let center: Array<number> = [];
@@ -32,13 +36,15 @@ onMounted(async () => {
     return {
       name: item.name,
       value: center,
+      // children: item.children,
+      children: [1,2,3],
     };
   });
-  console.log(data)
+  console.log(data);
+  
   const chart = echarts.init(document.querySelector("#china") as HTMLElement);
   echarts.registerMap("china", chinaJson as any);
   chart.setOption({
-    backgroundColor: "black",
     geo: {
       map: "china",
       aspectScale: 0.8,
@@ -73,31 +79,10 @@ onMounted(async () => {
         shadowOffsetY: 15,
         opacity: 0.5,
       },
-
-      regions: [
-        {
-          name: "南海诸岛",
-          itemStyle: {
-            areaColor: "rgba(0, 10, 52, 1)",
-            borderColor: "rgba(0, 10, 52, 1)",
-            opacity: 0,
-            label: {
-              show: false,
-              color: "#009cc9",
-            },
-          },
-          label: {
-            show: false,
-            color: "#FFFFFF",
-            fontSize: 12,
-          },
-        },
-      ],
     },
     series: [
       {
         type: "map",
-        selectedMode: "multiple",
         map: "china",
         aspectScale: 0.8,
         layoutCenter: ["50%", "65%"], //地图位置
@@ -156,7 +141,10 @@ onMounted(async () => {
       },
     ],
   });
-});
+  chart.on("click", (e: any) => {
+    console.log(e);
+  });
+};
 </script>
 
 <style lang='scss' scoped>

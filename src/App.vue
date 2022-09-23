@@ -6,7 +6,9 @@
     <div class="box-left"></div>
     <div class="box-middle" id="china"></div>
     <div class="box-right">
-      <table></table>
+      <table>
+        
+      </table>
     </div>
   </div>
 </template>
@@ -17,6 +19,7 @@ import { useStore } from "./stores";
 import { onMounted } from "vue";
 import * as echarts from "echarts";
 import chinaJson from "@/assets/china.json";
+import type { Children } from './stores/type'
 
 const store = useStore();
 onMounted(async () => {
@@ -25,23 +28,35 @@ onMounted(async () => {
 });
 const initChart = () => {
   const city = store.list.diseaseh5Shelf.areaTree[0].children;
-  const data = city.map((item) => {
+  const data: {
+    name: string;
+    value: Array<number>;
+  }[] = [];
+  const mapData: {
+    name: string;
+    son: Array<Children>;
+  }[] = [];
+  city.map((item) => {
     let center: Array<number> = [];
+    let areaName = ''
     chinaJson.features.map((i) => {
       if (i.properties.adcode == item.adcode) {
+        areaName = i.properties.name
         center = JSON.parse(JSON.stringify(i.properties.center));
         center.push(item.total.confirm);
       }
     });
-    return {
+    data.push({
       name: item.name,
       value: center,
-      // children: item.children,
-      children: [1,2,3],
-    };
+    });
+    mapData.push({
+      name: areaName,
+      son: item.children,
+    })
   });
   console.log(data);
-  
+
   const chart = echarts.init(document.querySelector("#china") as HTMLElement);
   echarts.registerMap("china", chinaJson as any);
   chart.setOption({
@@ -113,7 +128,7 @@ const initChart = () => {
             color: "#fff",
           },
         },
-        data: data,
+        data: mapData,
       },
       {
         type: "scatter",

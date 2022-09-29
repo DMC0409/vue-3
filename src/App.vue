@@ -6,8 +6,28 @@
     <div class="box-left"></div>
     <div class="box-middle" id="china"></div>
     <div class="box-right">
-      <table>
-        
+      <table class="table" cellspacing="0" border="1">
+        <thead>
+          <tr>
+            <th>地区</th>
+            <th>新增确诊</th>
+            <th>累计确诊</th>
+            <th>治愈</th>
+            <th>死亡</th>
+          </tr>
+        </thead>
+        <transition-group
+          tag="tbody"
+          enter-active-class="animate__animated animate__flipInY"
+        >
+          <tr v-for="item in store.item" :key="item.name">
+            <td align="center">{{ item.name }}</td>
+            <td align="center">{{ item.today.confirm }}</td>
+            <td align="center">{{ item.total.confirm }}</td>
+            <td align="center">{{ item.total.heal }}</td>
+            <td align="center">{{ item.total.dead }}</td>
+          </tr>
+        </transition-group>
       </table>
     </div>
   </div>
@@ -19,7 +39,8 @@ import { useStore } from "./stores";
 import { onMounted } from "vue";
 import * as echarts from "echarts";
 import chinaJson from "@/assets/china.json";
-import type { Children } from './stores/type'
+import type { Children } from "./stores/type";
+import "animate.css";
 
 const store = useStore();
 onMounted(async () => {
@@ -38,10 +59,10 @@ const initChart = () => {
   }[] = [];
   city.map((item) => {
     let center: Array<number> = [];
-    let areaName = ''
+    let areaName = "";
     chinaJson.features.map((i) => {
       if (i.properties.adcode == item.adcode) {
-        areaName = i.properties.name
+        areaName = i.properties.name;
         center = JSON.parse(JSON.stringify(i.properties.center));
         center.push(item.total.confirm);
       }
@@ -53,7 +74,7 @@ const initChart = () => {
     mapData.push({
       name: areaName,
       son: item.children,
-    })
+    });
   });
   console.log(data);
 
@@ -158,6 +179,7 @@ const initChart = () => {
   });
   chart.on("click", (e: any) => {
     console.log(e);
+    store.item = e.data.son;
   });
 };
 </script>
@@ -167,13 +189,29 @@ const initChart = () => {
   display: flex;
   height: 100%;
   &-left {
-    width: 200px;
+    width: 400px;
   }
   &-middle {
     flex: 1;
   }
   &-right {
-    width: 200px;
+    width: 400px;
+    color: white;
+    .table {
+      width: 100%;
+      background: #212028;
+      tr {
+        th {
+          padding: 5px;
+          white-space: nowrap;
+        }
+        td {
+          padding: 5px 10px;
+          width: 100px;
+          white-space: nowrap;
+        }
+      }
+    }
   }
 }
 </style>
